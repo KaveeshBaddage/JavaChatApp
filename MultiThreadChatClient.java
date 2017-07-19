@@ -8,9 +8,9 @@ import java.net.UnknownHostException;
 
 public class MultiThreadChatClient implements Runnable{
 
-	private static Socket clientSocket = null;
-	private static PrintStream os = null;
-	private static DataInputStream is = null;
+	private static Socket clientSocket = null; //clientSocket
+	private static PrintStream os = null;      //outputStream
+	private static DataInputStream is = null;  //inputStream
 	private static BufferdReader inputLine = null;
 	private static boolean closed = false;
 
@@ -22,15 +22,15 @@ public class MultiThreadChatClient implements Runnable{
 		if(args.length < 2){
 			System.out.println("Usage:java MultiThreadChatClient <host> <portNumber>\n" + "Now using host=" + host + ",port numbers =" + portNumber);
 		}else{
-			host = arg[0];
+			host = args[0];
 			portNumber = Integer.valueOf(args[1]).IntValue(); 
 		}
 
 		try{
-			clientSocket = new Socket(host,portNumber);
-			inputLine = new Bufferedreader(new inputStreamReader(System.in));
-			os = new PrintStream (clientSocket.getOutputStream());
-			is = new DataInputStream(clientSocket.getInputStream());
+			clientSocket = new Socket(host,portNumber); //intialize client socket
+			inputLine = new BufferedReader(new InputStreamReader(System.in)); //read user input
+			os = new PrintStream (clientSocket.getOutputStream());  //write Output stream to socket
+			is = new DataInputStream(clientSocket.getInputStream()); //Read from Socket
 		}catch(UnknownHostException e){
 			System.err.println("Don't know about host " + host);
 		}catch(IOException e){
@@ -39,7 +39,7 @@ public class MultiThreadChatClient implements Runnable{
 
 		if(clientSocket != null && os != null && is != null){
 			try{
-				new Thread(new MultiThreadChatClient()).start();
+				new Thread(new MultiThreadChatClient()).start(); // Create a thread to read from server
 				while(!closed){
 				os.println(inputLine.readLine());
 				}
@@ -56,10 +56,10 @@ public class MultiThreadChatClient implements Runnable{
 	}
 
 	public void run(){
-		String responseLine;
+		String responseLine;  //Used to read from socket
 		try{
-			while((responseLine =  is.readLine())!=null){
-				System.out.println(responseLine);
+			while((responseLine =  is.readLine())!=null){ //"is"-object of data input stream
+				System.out.println(responseLine); // print recieved message
 			}
 			closed = true;
 		}catch(IOException e){
