@@ -1,9 +1,9 @@
 import java.io.DataInputStream;
-import java.io.PrintSteram;
-import java.io.BufferReader;
+import java.io.PrintStream;
+import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.java.net.Socket;
+import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class MultiThreadChatClient implements Runnable{
@@ -11,10 +11,10 @@ public class MultiThreadChatClient implements Runnable{
 	private static Socket clientSocket = null; //clientSocket
 	private static PrintStream os = null;      //outputStream
 	private static DataInputStream is = null;  //inputStream
-	private static BufferdReader inputLine = null;
+	private static BufferedReader inputLine = null;
 	private static boolean closed = false;
 
-	public static void public static void main(String[] args) {
+	public static void main(String[] args) {
 
 		int portNumber = 5000;
 		String host = "localhost";
@@ -23,7 +23,7 @@ public class MultiThreadChatClient implements Runnable{
 			System.out.println("Usage:java MultiThreadChatClient <host> <portNumber>\n" + "Now using host=" + host + ",port numbers =" + portNumber);
 		}else{
 			host = args[0];
-			portNumber = Integer.valueOf(args[1]).IntValue(); 
+			portNumber = Integer.valueOf(args[1]).intValue(); 
 		}
 
 		try{
