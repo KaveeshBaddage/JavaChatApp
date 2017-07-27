@@ -13,13 +13,18 @@ public class MultiThreadServer implements Runnable{
 
 	public static void main(String args[]) throws Exception{
 		ServerSocket ssock = new ServerSocket(5000);
-		System.out.println("Listening");
+		System.out.println("Listening to the clints");
 		while(true){
+			PrintWriter out;
 			Socket sock = ssock.accept(); //Accept client socket
 			MultiThreadServer ser = new MultiThreadServer(sock); //Pass sock to constructor of MultiThreadServer class
  			new Thread(ser).start(); //start the thread
 			hm.put(k,sock);  //add sockets into hash map
-			System.out.println("Connected to client" + k); // print number of connected clients
+			System.out.println("Server is connected with client" + k); // print number of connected clients
+			Socket ser1 = hm.get(k);     // get the reciever's socket from hashMap
+			out = new PrintWriter(ser1.getOutputStream(),true); //Write the message on reciever's socket 
+			out.println("Clint ID is " + k); 
+			out.flush();
 			k++;
 		}
 	}
@@ -32,10 +37,12 @@ public class MultiThreadServer implements Runnable{
 			String j = "sendmsg"; // to Send a message
 			String l = "to";
 			String t = "sendtoall"; // to send messages to everyone
+			String m = "calculate"; // to do the calculation
 
 			while ((inputLine = in.readLine())!= null){
 				String a[] = inputLine.split(" ");     //Split client input using spaces and check a[0]='sendmsg' and a[2]='to'
 				if(a[0].equals(j) && a[2].equals(l)){
+					System.out.println("Connected two clints and message is sent");
 					int id = Integer.parseInt(a[3]);   // identify the receiver from client's input
 					if(hm.containsKey(id)){           //Check hashMap is that reciever in ashMap 
 						Socket ser1 = hm.get(id);     // get the reciever's socket from hashMap
@@ -50,7 +57,40 @@ public class MultiThreadServer implements Runnable{
 						out.flush();
 					}
 				}
+				else if (a[0].equals(m)) { //If clint needs to do a clculation
+					int operand1 = Integer.parseInt(a[1]);   // Get the operand1
+					int operand2 = Integer.parseInt(a[3]);   // Get the operand2
+					int id = Integer.parseInt(a[5]);   // identify the receiver from client's input
+					float answer = 0;
+					System.out.println("calculated " + operand1 + a[2] + operand2 + " for client" + a[5] + " and sent answer to "+ " client" + a[5]);
+					if(a[2].equals("+") && a[4].equals(l)){
+						 answer = operand1 + operand2;
+					}
+					else if(a[2].equals("-") && a[4].equals(l)){
+						answer = operand1 - operand2;
+
+					}
+					else if(a[2].equals("*") && a[4].equals(l)){
+						answer = operand1 * operand2;
+					}
+					else if(a[2].equals("/") && a[4].equals(l)){
+						answer = operand1 / operand2;
+					}
+						if(hm.containsKey(id)){           //Check hashMap is that reciever in ashMap 
+							Socket ser1 = hm.get(id);     // get the reciever's socket from hashMap
+							out = new PrintWriter(ser1.getOutputStream(),true); //Write the message on reciever's socket 
+							out.println(operand1 + a[2] + operand2 + "="+ answer); 
+							out.flush();
+
+						}
+						else{
+							out = new PrintWriter(csocket.getOutputStream(),true); //If specified reciever is not hashMap it says client is offline
+							out.println("User Offline");
+							out.flush();
+						}
+				}
 				else if (a[0].equals(t)) { //If clint needs to send a message to everyone
+					System.out.println("Connected all clients and meassages are sent to every client ");
 					for(int h =1;h<=hm.size();h++){
 						Socket ser1 = hm.get(h);
 						out = new PrintWriter(ser1.getOutputStream(),true);
