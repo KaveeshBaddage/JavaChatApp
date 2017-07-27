@@ -34,3 +34,13 @@ If you need to send a message to everyone
 
     sendtoall HelloEveryone
 
+Client can ask from the server to do simple calculation and get that answer to him or send it to another specified client.
+
+    calculate <operand1> <operator> <operand1> to <recipient's ID> 
+
+
+Ex calculate 1 + 2 to 2
+
+Here answer is calculated by server and send it to the client 2
+If a client wants to get an answer for a calculation, recipient's ID should be his ID. 
+
